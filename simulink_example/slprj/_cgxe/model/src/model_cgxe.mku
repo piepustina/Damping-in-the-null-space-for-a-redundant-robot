@@ -1,0 +1,112 @@
+#--------------------------- Tool Specifications -------------------------
+#
+# Modify the following macros to reflect the tools you wish to use for
+# compiling and linking your code.
+#
+CC = /home/pietro/MATLAB/R2024av4/bin/mex -R2018a
+LD = $(CC)
+ 
+MODEL  = model
+TARGET = cgxe
+MODULE_SRCS 	= m_iOZeEDZRCxmAiTWEIn3EAE.c m_Cb7aKKaIGPUv5eb5pz1rVG.c
+MODEL_SRC	= model_cgxe.c
+MODEL_REG    = model_cgxe_registry.c
+MAKEFILE    = model_cgxe.mku
+MATLAB_ROOT	= /home/pietro/MATLAB/R2024av4
+BUILDARGS   = 
+#------------------------------ Include/Lib Path ------------------------------
+ 
+
+ 
+USER_INCLUDES = -I"/media/Dati/Desktop/Sapienza/Dottorato/GitHub/Damping-in-the-null-space-for-a-redundant-robot/simulink_example" -I"/media/Dati/Desktop/Sapienza/Dottorato/GitHub/Damping-in-the-null-space-for-a-redundant-robot/simulink_example/slprj/_cprj" 
+MLSL_INCLUDES     = \
+    -I"/home/pietro/MATLAB/R2024av4/extern/include" \
+    -I"/home/pietro/MATLAB/R2024av4/simulink/include" \
+    -I"/home/pietro/MATLAB/R2024av4/rtw/c/src"
+
+THIRD_PARTY_INCLUDES = -I"/media/Dati/Desktop/Sapienza/Dottorato/GitHub/Damping-in-the-null-space-for-a-redundant-robot/simulink_example/slprj/_cgxe/model/src" -I"/home/pietro/MATLAB/R2024av4/extern/include/shared_robotics" -I"/home/pietro/MATLAB/R2024av4/toolbox/shared/robotics/externalDependency/libccd/src" -I"/home/pietro/MATLAB/R2024av4/toolbox/shared/robotics/externalDependency/libccd/src/ccd" 
+
+INCLUDE_PATH = $(MLSL_INCLUDES) $(USER_INCLUDES) $(THIRD_PARTY_INCLUDES)
+ 
+#----------------- Compiler and Linker Options --------------------------------
+ 
+
+CC_OPTS =  -w   -Dccd_EXPORTS
+CPP_REQ_DEFINES = -DMATLAB_MEX_FILE
+ 
+# Uncomment this line to move warning level to W4
+# cflags = $(cflags:W3=W4)
+CFLAGS = $(CPP_REQ_DEFINES) $(INCLUDE_PATH) CFLAGS="\$$CFLAGS $(CC_OPTS)"
+ 
+LDFLAGS =  
+ 
+AUXLDFLAGS = 
+#----------------------------- Source Files -----------------------------------
+ 
+USER_OBJS =
+
+AUX_SRCS = ccd_ccd.c ccd_mpr.c ccd_polytope.c ccd_vec3.c collisioncodegen_CollisionGeometry.cpp collisioncodegen_api.cpp collisioncodegen_ccdExtensions.cpp collisioncodegen_checkCollision.cpp  
+
+REQ_SRCS  = $(MODEL_SRC) $(MODEL_REG) $(MODULE_SRCS) $(AUX_SRCS) 
+
+REQ_OBJS = $(REQ_SRCS:.cpp=.o)
+REQ_OBJS2 = $(REQ_OBJS:.c=.o)
+OBJS = $(REQ_OBJS2) $(USER_OBJS) $(AUX_ABS_OBJS)
+OBJLIST_FILE = model_cgxe.mol
+TMWLIB = -L/home/pietro/MATLAB/R2024av4/bin/glnxa64 -lfixedpoint -L/home/pietro/MATLAB/R2024av4/bin/glnxa64 -lut -L/home/pietro/MATLAB/R2024av4/bin/glnxa64 -lemlrt -L/home/pietro/MATLAB/R2024av4/bin/glnxa64 -lmwslexec_simbridge -L/home/pietro/MATLAB/R2024av4/bin/glnxa64 -lmwcgxert -L/home/pietro/MATLAB/R2024av4/bin/glnxa64 -lmwcgxeooprt -L/home/pietro/MATLAB/R2024av4/bin/glnxa64 -lmwmathutil -L/home/pietro/MATLAB/R2024av4/bin/glnxa64 -lmwslccrt -L/home/pietro/MATLAB/R2024av4/bin/glnxa64 -lmwstringutil -L/home/pietro/MATLAB/R2024av4/bin/glnxa64 -lcovrt -L/home/pietro/MATLAB/R2024av4/bin/glnxa64 -lmwsl_sfcn_cov_bridge -L/home/pietro/MATLAB/R2024av4/bin/glnxa64 -lmwdsp_halidesim 
+PARLIB = 
+  MAPCSF = /home/pietro/MATLAB/R2024av4/tools/glnxa64/mapcsf
+   # RUN_MAPCSF_ON_UNIX is defined only if MAPCSF exists on this platform.
+   ifneq ($(wildcard $(MAPCSF)),) # run MAPCSF if it exists on this platform
+      RUN_MAPCSF_ON_UNIX =  /home/pietro/MATLAB/R2024av4/tools/glnxa64/mapcsf $@
+   endif
+ 
+THIRD_PARTY_LIBS = 
+
+#--------------------------------- Rules --------------------------------------
+ 
+MEX_FILE_NAME = $(MODEL)_$(TARGET).mexa64
+ 
+$(MEX_FILE_NAME): $(MAKEFILE) $(OBJS) $(MEXLIB)
+	@echo ### Linking ...
+	$(CC) -silent LDFLAGS="\$$LDFLAGS $(LDFLAGS) $(AUXLDFLAGS)" -output $(MEX_FILE_NAME) @$(OBJLIST_FILE) $(OBJS) $(TMWLIB) $(PARLIB) $(THIRD_PARTY_LIBS) 
+	$(RUN_MAPCSF_ON_UNIX)
+
+%.o :	%.c
+	$(CC) -c $(CFLAGS) $<
+
+%.o :	%.cpp
+	$(CC) -c $(CFLAGS) $<
+
+ccd_ccd.o :	/home/pietro/MATLAB/R2024av4/toolbox/shared/robotics/externalDependency/libccd/src/ccd_ccd.c
+	$(CC) -c $(CFLAGS) /home/pietro/MATLAB/R2024av4/toolbox/shared/robotics/externalDependency/libccd/src/ccd_ccd.c
+ccd_mpr.o :	/home/pietro/MATLAB/R2024av4/toolbox/shared/robotics/externalDependency/libccd/src/ccd_mpr.c
+	$(CC) -c $(CFLAGS) /home/pietro/MATLAB/R2024av4/toolbox/shared/robotics/externalDependency/libccd/src/ccd_mpr.c
+ccd_polytope.o :	/home/pietro/MATLAB/R2024av4/toolbox/shared/robotics/externalDependency/libccd/src/ccd_polytope.c
+	$(CC) -c $(CFLAGS) /home/pietro/MATLAB/R2024av4/toolbox/shared/robotics/externalDependency/libccd/src/ccd_polytope.c
+ccd_vec3.o :	/home/pietro/MATLAB/R2024av4/toolbox/shared/robotics/externalDependency/libccd/src/ccd_vec3.c
+	$(CC) -c $(CFLAGS) /home/pietro/MATLAB/R2024av4/toolbox/shared/robotics/externalDependency/libccd/src/ccd_vec3.c
+collisioncodegen_CollisionGeometry.o :	/home/pietro/MATLAB/R2024av4/toolbox/shared/robotics/robotcore/builtins/libsrc/collisioncodegen/collisioncodegen_CollisionGeometry.cpp
+	$(CC) -c $(CFLAGS) /home/pietro/MATLAB/R2024av4/toolbox/shared/robotics/robotcore/builtins/libsrc/collisioncodegen/collisioncodegen_CollisionGeometry.cpp
+collisioncodegen_api.o :	/home/pietro/MATLAB/R2024av4/toolbox/shared/robotics/robotcore/builtins/libsrc/collisioncodegen/collisioncodegen_api.cpp
+	$(CC) -c $(CFLAGS) /home/pietro/MATLAB/R2024av4/toolbox/shared/robotics/robotcore/builtins/libsrc/collisioncodegen/collisioncodegen_api.cpp
+collisioncodegen_ccdExtensions.o :	/home/pietro/MATLAB/R2024av4/toolbox/shared/robotics/robotcore/builtins/libsrc/collisioncodegen/collisioncodegen_ccdExtensions.cpp
+	$(CC) -c $(CFLAGS) /home/pietro/MATLAB/R2024av4/toolbox/shared/robotics/robotcore/builtins/libsrc/collisioncodegen/collisioncodegen_ccdExtensions.cpp
+collisioncodegen_checkCollision.o :	/home/pietro/MATLAB/R2024av4/toolbox/shared/robotics/robotcore/builtins/libsrc/collisioncodegen/collisioncodegen_checkCollision.cpp
+	$(CC) -c $(CFLAGS) /home/pietro/MATLAB/R2024av4/toolbox/shared/robotics/robotcore/builtins/libsrc/collisioncodegen/collisioncodegen_checkCollision.cpp
+%.o : /home/pietro/MATLAB/R2024av4/toolbox/shared/robotics/externalDependency/libccd/src/%.c
+	$(CC) -c $(CFLAGS) $<
+%.o : /home/pietro/MATLAB/R2024av4/toolbox/shared/robotics/externalDependency/libccd/src/%.c
+	$(CC) -c $(CFLAGS) $<
+%.o : /home/pietro/MATLAB/R2024av4/toolbox/shared/robotics/externalDependency/libccd/src/%.c
+	$(CC) -c $(CFLAGS) $<
+%.o : /home/pietro/MATLAB/R2024av4/toolbox/shared/robotics/externalDependency/libccd/src/%.c
+	$(CC) -c $(CFLAGS) $<
+%.o : /home/pietro/MATLAB/R2024av4/toolbox/shared/robotics/robotcore/builtins/libsrc/collisioncodegen/%.c
+	$(CC) -c $(CFLAGS) $<
+%.o : /home/pietro/MATLAB/R2024av4/toolbox/shared/robotics/robotcore/builtins/libsrc/collisioncodegen/%.c
+	$(CC) -c $(CFLAGS) $<
+%.o : /home/pietro/MATLAB/R2024av4/toolbox/shared/robotics/robotcore/builtins/libsrc/collisioncodegen/%.c
+	$(CC) -c $(CFLAGS) $<
+%.o : /home/pietro/MATLAB/R2024av4/toolbox/shared/robotics/robotcore/builtins/libsrc/collisioncodegen/%.c
+	$(CC) -c $(CFLAGS) $<
